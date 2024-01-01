@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAtom } from "jotai";
+
 import useTasks from "../hooks/useTasks";
 
 interface TaskLineProps {
@@ -8,12 +8,12 @@ interface TaskLineProps {
 }
 
 export default function TaskLine({ taskKey }: TaskLineProps) {
-  const { tasks } = useTasks();
+  const { tasks, toggleTaskIsCompleted } = useTasks();
 
   const { isCompleted, name } = tasks[taskKey];
 
   const handleToggleTask = () => {
-    console.log("Toggle task");
+    toggleTaskIsCompleted(taskKey);
   };
 
   return (
@@ -23,14 +23,14 @@ export default function TaskLine({ taskKey }: TaskLineProps) {
           <Ionicons
             style={styles.icon}
             name="checkmark-circle-outline"
-            size={24}
+            size={32}
             color="black"
           />
         ) : (
           <Ionicons
             style={styles.icon}
             name="ellipse-outline"
-            size={24}
+            size={32}
             color="black"
           />
         )}

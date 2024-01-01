@@ -22,7 +22,13 @@ const useTasks = () => {
     });
   };
 
-  return { tasks, addTask };
+  const toggleTaskIsCompleted = (taskKey: string) => {
+    setTasks((draft) => {
+      draft[taskKey].isCompleted = !draft[taskKey].isCompleted;
+    });
+  };
+
+  return { tasks, addTask, toggleTaskIsCompleted };
 };
 
 export default useTasks;
