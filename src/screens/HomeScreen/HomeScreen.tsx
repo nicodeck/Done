@@ -1,23 +1,31 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import TaskLine from "../../components/TaskLine";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAtom } from "jotai";
 import useTasks from "../../hooks/useTasks";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function HomeScreen() {
-  const { tasks } = useTasks();
+  const { tasks, addTask } = useTasks();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>My tasks</Text>
-      {Object.keys(tasks).map((key) => {
-        return <TaskLine key={key} taskKey={key} />;
-      })}
+      <ScrollView>
+        {Object.keys(tasks).map((key) => {
+          return <TaskLine key={key} taskKey={key} />;
+        })}
+      </ScrollView>
+      <Pressable onPress={addTask} style={styles.addButton}>
+        <Ionicons name="add-outline" size={24} color="black" />
+      </Pressable>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   title: {
     fontSize: 32,
     fontWeight: "bold",
@@ -27,5 +35,14 @@ const styles = StyleSheet.create({
     borderBottomColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
+  },
+  addButton: {
+    padding: 16,
+    borderColor: "black",
+    borderWidth: 2,
+    borderStyle: "solid",
+    position: "absolute",
+    bottom: 24,
+    right: 24,
   },
 });
