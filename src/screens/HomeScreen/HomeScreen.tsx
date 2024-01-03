@@ -16,7 +16,7 @@ export default function HomeScreen() {
         })}
       </ScrollView>
       <Pressable onPress={addTask} style={styles.addButton}>
-        <Ionicons name="add-outline" size={24} color="black" />
+        <Ionicons name="add-outline" size={24} color="white" />
       </Pressable>
     </SafeAreaView>
   );
@@ -37,12 +37,14 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
   },
   addButton: {
-    padding: 16,
-    borderColor: "black",
-    borderWidth: 2,
-    borderStyle: "solid",
+    backgroundColor: "black",
+    borderRadius: 50,
     position: "absolute",
     bottom: 24,
     right: 24,
+    height: 64,
+    width: 64,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
