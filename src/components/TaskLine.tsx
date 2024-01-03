@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import useTasks from "../hooks/useTasks";
@@ -8,7 +8,7 @@ interface TaskLineProps {
 }
 
 export default function TaskLine({ taskKey }: TaskLineProps) {
-  const { tasks, toggleTaskIsCompleted } = useTasks();
+  const { tasks, toggleTaskIsCompleted, updateTaskName } = useTasks();
 
   const { isCompleted, name } = tasks[taskKey];
 
@@ -16,27 +16,25 @@ export default function TaskLine({ taskKey }: TaskLineProps) {
     toggleTaskIsCompleted(taskKey);
   };
 
+  const handleTaskNameUpdate = (newName: string) => {
+    updateTaskName(taskKey, newName);
+  };
+
   return (
     <View style={styles.container}>
-      <Pressable onPress={handleToggleTask}>
+      <Pressable onPress={handleToggleTask} style={styles.isCompletedPressable}>
         {isCompleted ? (
-          <Ionicons
-            style={styles.icon}
-            name="checkmark-circle-outline"
-            size={32}
-            color="black"
-          />
+          <Ionicons name="checkmark-circle-outline" size={32} color="black" />
         ) : (
-          <Ionicons
-            style={styles.icon}
-            name="ellipse-outline"
-            size={32}
-            color="black"
-          />
+          <Ionicons name="ellipse-outline" size={32} color="black" />
         )}
       </Pressable>
 
-      <Text style={styles.taskText}>{name}</Text>
+      <TextInput
+        style={styles.taskText}
+        value={name}
+        onChangeText={handleTaskNameUpdate}
+      />
     </View>
   );
 }
@@ -47,16 +45,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
 
-    paddingVertical: 16,
+    paddingVertical: 8,
     paddingHorizontal: 8,
     borderBottomColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
   },
-  icon: {
-    marginRight: 8,
+  isCompletedPressable: {
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 8,
   },
   taskText: {
     fontSize: 20,
+    flex: 1,
+    height: 48,
+    paddingLeft: 16,
   },
 });
