@@ -32,7 +32,15 @@ const useTasks = () => {
     );
   };
 
-  return { tasks, addTask, toggleTaskIsCompleted };
+  const updateTaskName = (taskKey: string, newTaskName: string) => {
+    setTasks(
+      produce((draft) => {
+        draft[taskKey].name = newTaskName;
+      })
+    );
+  };
+
+  return { tasks, addTask, toggleTaskIsCompleted, updateTaskName };
 };
 
 export default useTasks;
