@@ -15,6 +15,18 @@ export default function HomeScreen() {
     setCompletedTasksContainerIsOpen(!completedTasksContainerIsOpen);
   };
 
+  const completedTasksList = () => {
+    return (
+      <View>
+        {Object.keys(tasks).map((key) => {
+          if (tasks[key].isCompleted) {
+            return <TaskLine key={key} taskKey={key} />;
+          }
+        })}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>My tasks</Text>
@@ -35,19 +47,7 @@ export default function HomeScreen() {
             <Ionicons name="chevron-down-outline" size={20} color="black" />
           )}
         </Pressable>
-        <View
-          style={
-            completedTasksContainerIsOpen
-              ? styles.completedTasksVisible
-              : styles.completedTasksInvisible
-          }
-        >
-          {Object.keys(tasks).map((key) => {
-            if (tasks[key].isCompleted) {
-              return <TaskLine key={key} taskKey={key} />;
-            }
-          })}
-        </View>
+        {completedTasksContainerIsOpen ? completedTasksList() : null}
       </ScrollView>
       <Pressable onPress={addTask} style={styles.addButton}>
         <Ionicons name="add-outline" size={24} color="white" />
@@ -79,12 +79,6 @@ const styles = StyleSheet.create({
   },
   completedTasksHeaderText: {
     fontSize: 16,
-  },
-  completedTasksInvisible: {
-    display: "none",
-  },
-  completedTasksVisible: {
-    display: "flex",
   },
   addButton: {
     backgroundColor: "black",
