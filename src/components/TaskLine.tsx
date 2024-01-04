@@ -2,6 +2,7 @@ import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import useTasks from "../hooks/useTasks";
+import { useState } from "react";
 
 interface TaskLineProps {
   taskKey: string;
@@ -12,12 +13,22 @@ export default function TaskLine({ taskKey }: TaskLineProps) {
 
   const { isCompleted, name } = tasks[taskKey];
 
+  const [isFocused, setIsFocused] = useState(false);
+
   const handleToggleTask = () => {
     toggleTaskIsCompleted(taskKey);
   };
 
   const handleTaskNameUpdate = (newName: string) => {
     updateTaskName(taskKey, newName);
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
   };
 
   return (
@@ -31,10 +42,20 @@ export default function TaskLine({ taskKey }: TaskLineProps) {
       </Pressable>
 
       <TextInput
-        style={styles.taskText}
+        style={[
+          styles.taskText,
+          isCompleted ? styles.taskTextIsCompleted : null,
+        ]}
         value={name}
         onChangeText={handleTaskNameUpdate}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
+      <View>
+        {isFocused ? (
+          <Ionicons name="trash-outline" size={24} color="red" />
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -62,5 +83,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     paddingLeft: 16,
+    color: "black",
+  },
+  taskTextIsCompleted: {
+    color: "#00000055",
+    textDecorationLine: "line-through",
   },
 });
