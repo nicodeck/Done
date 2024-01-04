@@ -58,16 +58,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    lineHeight: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomColor: "#00000022",
-    borderBottomWidth: 1,
-    borderStyle: "solid",
-  },
+
   completedTasksHeaderContainer: {
     padding: 16,
     backgroundColor: "#00000011",
