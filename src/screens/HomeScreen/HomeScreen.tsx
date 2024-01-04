@@ -14,6 +14,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default function HomeScreen() {
   const drawer = useRef<DrawerLayoutAndroid>(null);
 
+  const handleHamburgerPress = () => {
+    drawer.current?.openDrawer();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerLayoutAndroid
@@ -23,7 +27,10 @@ export default function HomeScreen() {
         renderNavigationView={TodoDrawer}
       >
         <View style={styles.header}>
-          <Pressable style={styles.menuHamburger}>
+          <Pressable
+            style={styles.menuHamburger}
+            onPress={handleHamburgerPress}
+          >
             <Ionicons name="menu-outline" size={32} color="black" />
           </Pressable>
           <Text style={styles.headerText}>My Tasks</Text>
