@@ -2,15 +2,12 @@ import uuid from "react-native-uuid";
 import { atom, useAtom } from "jotai";
 import { produce } from "immer";
 
-const uuid1 = uuid.v4() as string;
-const uuid2 = uuid.v4() as string;
-const uuid3 = uuid.v4() as string;
+export interface ITask {
+  name: string;
+  isCompleted: boolean;
+}
 
-const tasksAtom = atom({
-  [uuid1]: { name: "Read a book", isCompleted: false },
-  [uuid2]: { name: "Buy groceries", isCompleted: false },
-  [uuid3]: { name: "Do laundry", isCompleted: true },
-});
+const tasksAtom = atom<Record<string, ITask>>({});
 
 const useTasks = () => {
   const [tasks, setTasks] = useAtom(tasksAtom);
