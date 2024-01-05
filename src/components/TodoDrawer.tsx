@@ -2,11 +2,15 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import DrawerLine from "./DrawerLine";
 
-export default function TodoDrawer() {
+interface TodoDrawerProps {
+  closeButtonFunction: () => void;
+}
+
+export default function TodoDrawer({ closeButtonFunction }: TodoDrawerProps) {
   return (
     <View>
       <View style={styles.header}>
-        <Pressable style={styles.closeButton}>
+        <Pressable style={styles.closeButton} onPress={closeButtonFunction}>
           <Ionicons name="close-outline" size={32} color="black" />
         </Pressable>
         <Text style={styles.headerText}>My Todo Lists</Text>

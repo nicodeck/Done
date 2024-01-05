@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   DrawerLayoutAndroid,
   View,
@@ -18,13 +18,19 @@ export default function HomeScreen() {
     drawer.current?.openDrawer();
   };
 
+  const handleDrawerCloseButton = () => {
+    drawer.current?.closeDrawer();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerLayoutAndroid
         ref={drawer}
         drawerWidth={300}
         drawerPosition="left"
-        renderNavigationView={TodoDrawer}
+        renderNavigationView={() => (
+          <TodoDrawer closeButtonFunction={handleDrawerCloseButton} />
+        )}
       >
         <View style={styles.header}>
           <Pressable
@@ -44,6 +50,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   header: {
     paddingRight: 16,
+    paddingVertical: 16,
     borderColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
