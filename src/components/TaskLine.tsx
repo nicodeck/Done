@@ -35,9 +35,9 @@ export default function TaskLine({ taskKey }: TaskLineProps) {
     <View style={styles.container}>
       <Pressable onPress={handleToggleTask} style={styles.isCompletedPressable}>
         {isCompleted ? (
-          <Ionicons name="checkmark-circle-outline" size={32} color="black" />
+          <Ionicons name="checkmark-circle-outline" size={24} color="black" />
         ) : (
-          <Ionicons name="ellipse-outline" size={32} color="black" />
+          <Ionicons name="ellipse-outline" size={24} color="black" />
         )}
       </Pressable>
 
@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   taskText: {
-    fontSize: 20,
+    fontSize: 16,
     flex: 1,
     height: 48,
-    paddingLeft: 16,
+    paddingLeft: 8,
     color: "black",
   },
   taskTextIsCompleted: {

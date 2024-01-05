@@ -1,50 +1,69 @@
-import { Text, StyleSheet, Pressable, ScrollView } from "react-native";
-import TaskLine from "../../components/TaskLine";
+import { useEffect, useRef } from "react";
+import {
+  DrawerLayoutAndroid,
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+} from "react-native";
+import TodoDrawer from "../../components/TodoDrawer";
+import TodoList from "../../components/TodoList";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useTasks from "../../hooks/useTasks";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function HomeScreen() {
-  const { tasks, addTask } = useTasks();
+  const drawer = useRef<DrawerLayoutAndroid>(null);
+
+  const handleHamburgerPress = () => {
+    drawer.current?.openDrawer();
+  };
+
+  const handleDrawerCloseButton = () => {
+    drawer.current?.closeDrawer();
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>My tasks</Text>
-      <ScrollView>
-        {Object.keys(tasks).map((key) => {
-          return <TaskLine key={key} taskKey={key} />;
-        })}
-      </ScrollView>
-      <Pressable onPress={addTask} style={styles.addButton}>
-        <Ionicons name="add-outline" size={24} color="white" />
-      </Pressable>
+    <SafeAreaView style={{ flex: 1 }}>
+      <DrawerLayoutAndroid
+        ref={drawer}
+        drawerWidth={300}
+        drawerPosition="left"
+        renderNavigationView={() => (
+          <TodoDrawer closeButtonFunction={handleDrawerCloseButton} />
+        )}
+      >
+        <View style={styles.header}>
+          <Pressable
+            style={styles.menuHamburger}
+            onPress={handleHamburgerPress}
+          >
+            <Ionicons name="menu-outline" size={32} color="black" />
+          </Pressable>
+          <Text style={styles.headerText}>My Tasks</Text>
+        </View>
+        <TodoList />
+      </DrawerLayoutAndroid>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    lineHeight: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomColor: "#00000022",
+  header: {
+    paddingRight: 16,
+    paddingVertical: 16,
+    borderColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
-  },
-  addButton: {
-    backgroundColor: "black",
-    borderRadius: 50,
-    position: "absolute",
-    bottom: 24,
-    right: 24,
-    height: 64,
-    width: 64,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+  },
+  menuHamburger: {
+    marginRight: 8,
+    padding: 8,
+    paddingLeft: 16,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
   },
 });
