@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingVertical: 24,
     flexDirection: "row",
+    borderColor: "#00000022",
+    borderStyle: "solid",
+    borderBottomWidth: 1,
   },
   closeButton: {
     paddingHorizontal: 16,

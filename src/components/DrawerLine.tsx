@@ -10,18 +10,12 @@ export default function DrawerLine() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#00000009",
-    marginRight: 16,
-    marginVertical: 8,
-    paddingVertical: 16,
+    paddingVertical: 24,
     paddingLeft: 16,
     paddingRight: 8,
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    borderColor: "grey",
+    borderColor: "#00000022",
     borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
+    borderBottomWidth: 1,
   },
   title: {
     fontSize: 16,
