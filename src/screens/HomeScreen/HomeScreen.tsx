@@ -39,9 +39,7 @@ export default function HomeScreen() {
   useEffect(() => {
     if (currentTodoListKey !== "") return;
 
-    if (Object.keys(todoLists).length === 0) {
-      console.log("State is still empty");
-    } else {
+    if (Object.keys(todoLists).length > 0) {
       setCurrentTodoListKey(Object.keys(todoLists)[0]);
     }
   }, [todoLists]);
