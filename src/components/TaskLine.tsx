@@ -5,22 +5,23 @@ import useTasks from "../hooks/useTasks";
 import { useState } from "react";
 
 interface TaskLineProps {
+  todoListKey: string;
   taskKey: string;
 }
 
-export default function TaskLine({ taskKey }: TaskLineProps) {
-  const { tasks, toggleTaskIsCompleted, updateTaskName } = useTasks();
+export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
+  const { todoLists, toggleTaskIsCompleted, updateTaskName } = useTasks();
 
-  const { isCompleted, name } = tasks[taskKey];
+  const { isCompleted, name } = todoLists[todoListKey].tasks[taskKey];
 
   const [isFocused, setIsFocused] = useState(false);
 
   const handleToggleTask = () => {
-    toggleTaskIsCompleted(taskKey);
+    toggleTaskIsCompleted(todoListKey, taskKey);
   };
 
   const handleTaskNameUpdate = (newName: string) => {
-    updateTaskName(taskKey, newName);
+    updateTaskName(todoListKey, taskKey, newName);
   };
 
   const handleFocus = () => {
