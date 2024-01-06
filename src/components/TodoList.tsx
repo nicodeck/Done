@@ -4,8 +4,14 @@ import TaskLine from "./TaskLine";
 import useTasks from "../hooks/useTasks";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function TodoList() {
-  const { tasks, addTask } = useTasks();
+interface TodoListProps {
+  todoListKey: string;
+}
+
+export default function TodoList({ todoListKey }: TodoListProps) {
+  const { todoLists, addTask } = useTasks();
+
+  const tasks = todoListKey ? todoLists[todoListKey].tasks : {};
 
   const countOfNotCompletedTasks = Object.values(tasks).reduce(
     (count, task) => (!task.isCompleted ? count + 1 : count),
@@ -24,12 +30,18 @@ export default function TodoList() {
     setCompletedTasksContainerIsOpen(!completedTasksContainerIsOpen);
   };
 
+  const handlePressOnAddTask = () => {
+    addTask(todoListKey);
+  };
+
   const completedTasksList = () => {
     return (
       <View>
         {Object.keys(tasks).map((key) => {
           if (tasks[key].isCompleted) {
-            return <TaskLine key={key} taskKey={key} />;
+            return (
+              <TaskLine key={key} todoListKey={todoListKey} taskKey={key} />
+            );
           }
         })}
       </View>
@@ -42,7 +54,9 @@ export default function TodoList() {
         {countOfNotCompletedTasks > 0 ? (
           Object.keys(tasks).map((key) => {
             if (!tasks[key].isCompleted) {
-              return <TaskLine key={key} taskKey={key} />;
+              return (
+                <TaskLine key={key} todoListKey={todoListKey} taskKey={key} />
+              );
             }
           })
         ) : (
@@ -66,7 +80,7 @@ export default function TodoList() {
         )}
         {completedTasksContainerIsOpen ? completedTasksList() : null}
       </ScrollView>
-      <Pressable onPress={addTask} style={styles.addButton}>
+      <Pressable onPress={handlePressOnAddTask} style={styles.addButton}>
         <Ionicons name="add-outline" size={24} color="white" />
       </Pressable>
     </View>

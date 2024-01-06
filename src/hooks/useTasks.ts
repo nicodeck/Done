@@ -13,14 +13,9 @@ type TodoListType = {
 };
 
 type TodoListsType = Record<string, TodoListType>;
-
-const tasksAtom = atom<TodoListType>({ name: "", tasks: {} });
-
 const todoListsAtom = atom<TodoListsType>({});
 
 const useTasks = () => {
-  const [tasks, setTasks] = useAtom(tasksAtom);
-
   const [todoLists, setTodoLists] = useAtom(todoListsAtom);
 
   const fillTodoLists = () => {
@@ -37,7 +32,7 @@ const useTasks = () => {
     });
   };
 
-  const addTodoList = (name: string) => {
+  const addTodoList = () => {
     const todoListUUID = uuid.v4() as string;
 
     setTodoLists(
@@ -81,7 +76,6 @@ const useTasks = () => {
   };
 
   return {
-    tasks,
     todoLists,
     fillTodoLists,
     addTodoList,

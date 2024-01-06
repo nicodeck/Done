@@ -10,9 +10,19 @@ import TodoDrawer from "../../components/TodoDrawer";
 import TodoList from "../../components/TodoList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import useTasks from "../../hooks/useTasks";
+import { atom, useAtom } from "jotai";
+
+const currentTodoListKeyAtom = atom<string>("");
 
 export default function HomeScreen() {
+  const { todoLists, fillTodoLists } = useTasks();
+
   const drawer = useRef<DrawerLayoutAndroid>(null);
+
+  const [currentTodoListKey, setCurrentTodoListKey] = useAtom(
+    currentTodoListKeyAtom
+  );
 
   const handleHamburgerPress = () => {
     drawer.current?.openDrawer();
@@ -21,6 +31,20 @@ export default function HomeScreen() {
   const handleDrawerCloseButton = () => {
     drawer.current?.closeDrawer();
   };
+
+  useEffect(() => {
+    fillTodoLists();
+  }, []);
+
+  useEffect(() => {
+    if (currentTodoListKey !== "") return;
+
+    if (Object.keys(todoLists).length === 0) {
+      console.log("State is still empty");
+    } else {
+      setCurrentTodoListKey(Object.keys(todoLists)[0]);
+    }
+  }, [todoLists]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -41,7 +65,7 @@ export default function HomeScreen() {
           </Pressable>
           <Text style={styles.headerText}>My Tasks</Text>
         </View>
-        <TodoList />
+        <TodoList todoListKey={currentTodoListKey} />
       </DrawerLayoutAndroid>
     </SafeAreaView>
   );
