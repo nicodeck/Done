@@ -50,10 +50,8 @@ describe("useTasks", () => {
       const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
       const { result } = renderHook(() => useTasks(), { wrapper });
 
-      console.log(result.current.todoLists);
-
       act(() => {
-        result.current.addTodoList("New Todo List");
+        result.current.addTodoList();
       });
       expect(Object.keys(result.current.todoLists).length).toBe(1);
 
@@ -73,7 +71,7 @@ describe("useTasks", () => {
       const { result } = renderHook(() => useTasks(), { wrapper });
 
       act(() => {
-        result.current.addTodoList("New Todo List");
+        result.current.addTodoList();
       });
 
       const todoListKey = Object.keys(result.current.todoLists)[0];
@@ -124,7 +122,7 @@ describe("useTasks", () => {
       const { result } = renderHook(() => useTasks(), { wrapper });
 
       act(() => {
-        result.current.addTodoList("New Todo List");
+        result.current.addTodoList();
       });
 
       const todoListKey = Object.keys(result.current.todoLists)[0];
@@ -163,7 +161,7 @@ describe("useTasks", () => {
       const { result } = renderHook(() => useTasks(), { wrapper });
 
       act(() => {
-        result.current.addTodoList("New Todo List");
+        result.current.addTodoList();
       });
 
       const todoListKey = Object.keys(result.current.todoLists)[0];
