@@ -14,13 +14,32 @@ type TodoListType = {
 
 type TodoListsType = Record<string, TodoListType>;
 
-type ActionType = {
-  type: "fill" | "addTodoList";
-};
+type ActionType =
+  | {
+      type: "SeedTodoLists";
+    }
+  | {
+      type: "AddNewTodoList";
+    }
+  | {
+      type: "AddNewTask";
+      todoListKey: string;
+    }
+  | {
+      type: "ToggleTaskIsCompleted";
+      todoListKey: string;
+      taskKey: string;
+    }
+  | {
+      type: "UpdateTaskName";
+      todoListKey: string;
+      taskKey: string;
+      name: string;
+    };
 
 function reducer(state: TodoListsType, action: ActionType) {
   switch (action.type) {
-    case "fill":
+    case "SeedTodoLists": {
       return {
         todoListKey0: {
           name: "My Tasks",
@@ -32,13 +51,42 @@ function reducer(state: TodoListsType, action: ActionType) {
           },
         },
       };
-      break;
-    case "addTodoList":
-      const TodoListUUID = uuid.v4() as string;
+    }
+    case "AddNewTodoList": {
+      const todoListUUID = uuid.v4() as string;
       return produce(state, (draft) => {
-        draft[TodoListUUID] = { name: "New Todo List", tasks: {} };
+        draft[todoListUUID] = { name: "New Todo List", tasks: {} };
       });
-      break;
+    }
+
+    case "AddNewTask": {
+      const todoListKey = action.todoListKey;
+      const taskUUID = uuid.v4() as string;
+      return produce((draft) => {
+        draft[todoListKey].tasks[taskUUID] = {
+          name: "New Task",
+          isCompleted: false,
+        };
+      });
+    }
+
+    case "ToggleTaskIsCompleted": {
+      const todoListKey = action.todoListKey;
+      const taskKey = action.taskKey;
+      return produce((draft) => {
+        draft[todoListKey].tasks[taskKey].isCompleted =
+          !draft[todoListKey].tasks[taskKey].isCompleted;
+      });
+    }
+
+    case "UpdateTaskName": {
+      const todoListKey = action.todoListKey;
+      const taskKey = action.taskKey;
+      const newName = action.name;
+      return produce((draft) => {
+        draft[todoListKey].tasks[taskKey].name = newName;
+      });
+    }
 
     default:
       return state;
