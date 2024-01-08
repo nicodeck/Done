@@ -35,6 +35,11 @@ type ActionType =
       todoListKey: string;
       taskKey: string;
       name: string;
+    }
+  | {
+      type: "DeleteTask";
+      todoListKey: string;
+      taskKey: string;
     };
 
 function reducer(state: TodoListsType, action: ActionType) {
@@ -85,6 +90,14 @@ function reducer(state: TodoListsType, action: ActionType) {
       const newName = action.name;
       return produce((draft) => {
         draft[todoListKey].tasks[taskKey].name = newName;
+      });
+    }
+
+    case "DeleteTask": {
+      const todoListKey = action.todoListKey;
+      const taskKey = action.taskKey;
+      return produce((draft) => {
+        delete draft[todoListKey].tasks[taskKey];
       });
     }
 

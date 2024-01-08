@@ -47,181 +47,204 @@ describe("useTasks", () => {
     expect(todoLists).toMatchObject(todoListsToMatch);
   });
 
-  /* Single todo list */
+  it("should create a new todo list", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
 
-  describe("single todo list", () => {
-    afterEach(() => {
-      cleanup();
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
     });
 
-    it("should create a new todo list", () => {
-      const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    let [todoLists] = result.current;
 
-      const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    expect(Object.keys(todoLists).length).toBe(1);
 
-      const [, setTodoLists] = result.current;
+    const todoListKey = Object.keys(todoLists)[0];
+    const newTodoList = todoLists[todoListKey];
 
-      act(() => {
-        setTodoLists({ type: "AddNewTodoList" });
-      });
+    const todoListToMatch = {
+      name: "New Todo List",
+      tasks: {},
+    };
 
-      let [todoLists] = result.current;
+    expect(newTodoList).toMatchObject(todoListToMatch);
+  });
 
-      expect(Object.keys(todoLists).length).toBe(1);
+  it("should accept new tasks", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
 
-      const todoListKey = Object.keys(todoLists)[0];
-      const newTodoList = todoLists[todoListKey];
+    const [, setTodoLists] = result.current;
 
-      const todoListToMatch = {
-        name: "New Todo List",
-        tasks: {},
-      };
-
-      expect(newTodoList).toMatchObject(todoListToMatch);
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
     });
 
-    it("should accept new tasks", () => {
-      const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
-      const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    let [todoLists] = result.current;
 
-      const [, setTodoLists] = result.current;
+    const todoListKey = Object.keys(todoLists)[0];
 
-      act(() => {
-        setTodoLists({ type: "AddNewTodoList" });
-      });
-
-      let [todoLists] = result.current;
-
-      const todoListKey = Object.keys(todoLists)[0];
-
-      act(() => {
-        setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
-      });
-
-      [todoLists] = result.current;
-
-      expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
-
-      const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
-
-      const taskToMatch = {
-        name: "New Task",
-        isCompleted: false,
-      };
-
-      expect(todoLists[todoListKey].tasks[singleTaskKey]).toMatchObject(
-        taskToMatch
-      );
-
-      act(() => {
-        setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
-      });
-
-      [todoLists] = result.current;
-
-      expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(2);
-
-      const twoTasksKeys = Object.keys(todoLists[todoListKey].tasks);
-
-      expect(todoLists[todoListKey].tasks[twoTasksKeys[0]]).toMatchObject(
-        taskToMatch
-      );
-      expect(todoLists[todoListKey].tasks[twoTasksKeys[1]]).toMatchObject(
-        taskToMatch
-      );
+    act(() => {
+      setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
     });
 
-    it("should update isCompleted property", () => {
-      const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
-      const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    [todoLists] = result.current;
 
-      const [, setTodoLists] = result.current;
+    expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
 
-      act(() => {
-        setTodoLists({ type: "AddNewTodoList" });
-      });
+    const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
 
-      let [todoLists] = result.current;
+    const taskToMatch = {
+      name: "New Task",
+      isCompleted: false,
+    };
 
-      const todoListKey = Object.keys(todoLists)[0];
+    expect(todoLists[todoListKey].tasks[singleTaskKey]).toMatchObject(
+      taskToMatch
+    );
 
-      act(() => {
-        setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
-      });
-
-      [todoLists] = result.current;
-
-      expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
-
-      const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
-
-      act(() => {
-        setTodoLists({
-          type: "ToggleTaskIsCompleted",
-          todoListKey: todoListKey,
-          taskKey: singleTaskKey,
-        });
-      });
-
-      [todoLists] = result.current;
-
-      expect(todoLists[todoListKey].tasks[singleTaskKey].isCompleted).toBe(
-        true
-      );
-
-      act(() => {
-        setTodoLists({
-          type: "ToggleTaskIsCompleted",
-          todoListKey: todoListKey,
-          taskKey: singleTaskKey,
-        });
-      });
-
-      [todoLists] = result.current;
-
-      expect(todoLists[todoListKey].tasks[singleTaskKey].isCompleted).toBe(
-        false
-      );
+    act(() => {
+      setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
     });
 
-    it("should change the name of a task", () => {
-      const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
-      const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    [todoLists] = result.current;
 
-      const [, setTodoLists] = result.current;
+    expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(2);
 
-      act(() => {
-        setTodoLists({ type: "AddNewTodoList" });
-      });
+    const twoTasksKeys = Object.keys(todoLists[todoListKey].tasks);
 
-      let [todoLists] = result.current;
+    expect(todoLists[todoListKey].tasks[twoTasksKeys[0]]).toMatchObject(
+      taskToMatch
+    );
+    expect(todoLists[todoListKey].tasks[twoTasksKeys[1]]).toMatchObject(
+      taskToMatch
+    );
+  });
 
-      const todoListKey = Object.keys(todoLists)[0];
+  it("should update isCompleted property", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
 
-      act(() => {
-        setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
-      });
+    const [, setTodoLists] = result.current;
 
-      [todoLists] = result.current;
-
-      expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
-
-      const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
-
-      act(() => {
-        setTodoLists({
-          type: "UpdateTaskName",
-          todoListKey: todoListKey,
-          taskKey: singleTaskKey,
-          name: "Testing my task",
-        });
-      });
-
-      [todoLists] = result.current;
-
-      expect(todoLists[todoListKey].tasks[singleTaskKey].name).toBe(
-        "Testing my task"
-      );
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
     });
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() => {
+      setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
+    });
+
+    [todoLists] = result.current;
+
+    expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
+
+    const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
+
+    act(() => {
+      setTodoLists({
+        type: "ToggleTaskIsCompleted",
+        todoListKey: todoListKey,
+        taskKey: singleTaskKey,
+      });
+    });
+
+    [todoLists] = result.current;
+
+    expect(todoLists[todoListKey].tasks[singleTaskKey].isCompleted).toBe(true);
+
+    act(() => {
+      setTodoLists({
+        type: "ToggleTaskIsCompleted",
+        todoListKey: todoListKey,
+        taskKey: singleTaskKey,
+      });
+    });
+
+    [todoLists] = result.current;
+
+    expect(todoLists[todoListKey].tasks[singleTaskKey].isCompleted).toBe(false);
+  });
+
+  it("should change the name of a task", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
+    });
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() => {
+      setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
+    });
+
+    [todoLists] = result.current;
+
+    expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
+
+    const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
+
+    act(() => {
+      setTodoLists({
+        type: "UpdateTaskName",
+        todoListKey: todoListKey,
+        taskKey: singleTaskKey,
+        name: "Testing my task",
+      });
+    });
+
+    [todoLists] = result.current;
+
+    expect(todoLists[todoListKey].tasks[singleTaskKey].name).toBe(
+      "Testing my task"
+    );
+  });
+
+  it("should delete a task", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
+    });
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() => {
+      setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
+    });
+
+    [todoLists] = result.current;
+
+    const taskKey = Object.keys(todoLists[todoListKey].tasks)[0];
+
+    act(() => {
+      setTodoLists({
+        type: "DeleteTask",
+        todoListKey: todoListKey,
+        taskKey: taskKey,
+      });
+    });
+
+    [todoLists] = result.current;
+
+    expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(0);
   });
 });
