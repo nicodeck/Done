@@ -1,15 +1,17 @@
-import { useState } from "react";
 import { Text, StyleSheet, Pressable, ScrollView, View } from "react-native";
 import TaskLine from "./TaskLine";
-import useTasks from "../hooks/useTasks";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { TodoListsAtom } from "@/state";
+import { atom, useAtom } from "jotai";
 
 interface TodoListProps {
   todoListKey: string;
 }
 
+const completedTasksContainerIsOpenAtom = atom(false);
+
 export default function TodoList({ todoListKey }: TodoListProps) {
-  const { todoLists, addTask } = useTasks();
+  const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
 
   const tasks = todoListKey ? todoLists[todoListKey].tasks : {};
 
@@ -24,14 +26,17 @@ export default function TodoList({ todoListKey }: TodoListProps) {
   );
 
   const [completedTasksContainerIsOpen, setCompletedTasksContainerIsOpen] =
-    useState(false);
+    useAtom(completedTasksContainerIsOpenAtom);
 
   const handlePressOnCompletedTasksHeader = () => {
     setCompletedTasksContainerIsOpen(!completedTasksContainerIsOpen);
   };
 
   const handlePressOnAddTask = () => {
-    addTask(todoListKey);
+    setTodoLists({
+      type: "AddNewTask",
+      todoListKey: todoListKey,
+    });
   };
 
   const completedTasksList = () => {

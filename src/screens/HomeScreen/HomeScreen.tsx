@@ -10,13 +10,13 @@ import TodoDrawer from "../../components/TodoDrawer";
 import TodoList from "../../components/TodoList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import useTasks from "../../hooks/useTasks";
+import { TodoListsAtom } from "@/state";
 import { atom, useAtom } from "jotai";
 
 const currentTodoListKeyAtom = atom<string>("");
 
 export default function HomeScreen() {
-  const { todoLists, fillTodoLists } = useTasks();
+  const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
 
   const drawer = useRef<DrawerLayoutAndroid>(null);
 
@@ -33,7 +33,7 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    fillTodoLists();
+    setTodoLists({ type: "SeedTodoLists" });
   }, []);
 
   useEffect(() => {
