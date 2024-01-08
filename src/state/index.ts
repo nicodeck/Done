@@ -102,8 +102,8 @@ function reducer(state: TodoListsType, action: ActionType) {
     }
 
     default:
-      return state;
-      break;
+      const _exhaustiveCheck: never = action;
+      return _exhaustiveCheck;
   }
 }
 
