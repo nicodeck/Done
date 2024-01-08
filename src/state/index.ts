@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { PrimitiveAtom, WritableAtom, atom } from "jotai";
+import { atom } from "jotai";
 import uuid from "react-native-uuid";
 
 type TaskType = {

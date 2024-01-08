@@ -1,8 +1,8 @@
 import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
-import useTasks from "../hooks/useTasks";
-import { useState } from "react";
+import { atom, useAtom } from "jotai";
+import { TodoListsAtom } from "@/state";
+import { useMemo } from "react";
 
 interface TaskLineProps {
   todoListKey: string;
@@ -10,18 +10,29 @@ interface TaskLineProps {
 }
 
 export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
-  const { todoLists, toggleTaskIsCompleted, updateTaskName } = useTasks();
+  const isFocusedAtom = useMemo(() => atom(false), []);
+
+  const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
 
   const { isCompleted, name } = todoLists[todoListKey].tasks[taskKey];
 
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
 
   const handleToggleTask = () => {
-    toggleTaskIsCompleted(todoListKey, taskKey);
+    setTodoLists({
+      type: "ToggleTaskIsCompleted",
+      todoListKey: todoListKey,
+      taskKey: taskKey,
+    });
   };
 
   const handleTaskNameUpdate = (newName: string) => {
-    updateTaskName(todoListKey, taskKey, newName);
+    setTodoLists({
+      type: "UpdateTaskName",
+      todoListKey: todoListKey,
+      taskKey: taskKey,
+      name: newName,
+    });
   };
 
   const handleFocus = () => {
