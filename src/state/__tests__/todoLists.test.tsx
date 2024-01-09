@@ -41,6 +41,24 @@ describe("useTasks", () => {
           key3: { name: "Check emails", isCompleted: true },
         },
       },
+      todoListKey1: {
+        name: "Holidays",
+        tasks: {
+          key0: { name: "Book a hotel", isCompleted: true },
+          key1: { name: "Go to the beach", isCompleted: false },
+          key2: { name: "Buy sunglasses", isCompleted: false },
+          key3: { name: "Turn off my phone", isCompleted: true },
+        },
+      },
+      todoListKey2: {
+        name: "Project",
+        tasks: {
+          key0: { name: "Make a todo list", isCompleted: true },
+          key1: { name: "Write the report", isCompleted: false },
+          key2: { name: "Prepare the meeting", isCompleted: false },
+          key3: { name: "Brainstorm", isCompleted: true },
+        },
+      },
     };
     const [todoLists] = result.current;
 
