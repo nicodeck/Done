@@ -40,6 +40,10 @@ type ActionType =
       type: "DeleteTask";
       todoListKey: string;
       taskKey: string;
+    }
+  | {
+      type: "DeleteTodoList";
+      todoListKey: string;
     };
 
 function reducer(state: TodoListsType, action: ActionType) {
@@ -85,7 +89,7 @@ function reducer(state: TodoListsType, action: ActionType) {
     case "AddNewTask": {
       const todoListKey = action.todoListKey;
       const taskUUID = uuid.v4() as string;
-      return produce((draft) => {
+      return produce(state, (draft) => {
         draft[todoListKey].tasks[taskUUID] = {
           name: "New Task",
           isCompleted: false,
@@ -96,7 +100,7 @@ function reducer(state: TodoListsType, action: ActionType) {
     case "ToggleTaskIsCompleted": {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
-      return produce((draft) => {
+      return produce(state, (draft) => {
         draft[todoListKey].tasks[taskKey].isCompleted =
           !draft[todoListKey].tasks[taskKey].isCompleted;
       });
@@ -106,7 +110,7 @@ function reducer(state: TodoListsType, action: ActionType) {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
       const newName = action.name;
-      return produce((draft) => {
+      return produce(state, (draft) => {
         draft[todoListKey].tasks[taskKey].name = newName;
       });
     }
@@ -114,14 +118,21 @@ function reducer(state: TodoListsType, action: ActionType) {
     case "DeleteTask": {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
-      return produce((draft) => {
+      return produce(state, (draft) => {
         delete draft[todoListKey].tasks[taskKey];
+      });
+    }
+
+    case "DeleteTodoList": {
+      const todoListKey = action.todoListKey;
+      return produce(state, (draft) => {
+        delete draft[todoListKey];
       });
     }
 
     default:
       const _exhaustiveCheck: never = action;
-      return _exhaustiveCheck;
+      return state;
   }
 }
 

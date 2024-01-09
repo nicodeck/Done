@@ -265,4 +265,25 @@ describe("useTasks", () => {
 
     expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(0);
   });
+
+  it("deletes a todo list", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => setTodoLists({ type: "SeedTodoLists" }));
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() =>
+      setTodoLists({ type: "DeleteTodoList", todoListKey: todoListKey })
+    );
+
+    [todoLists] = result.current;
+
+    expect(todoLists[todoListKey]).toBeUndefined();
+  });
 });
