@@ -11,12 +11,16 @@ import TodoList from "../../components/TodoList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { TodoListsAtom } from "@/state";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
 const currentTodoListKeyAtom = atom<string>("");
 
+const todoListsKeysAtom = atom((get) => Object.keys(get(TodoListsAtom)));
+
 export default function HomeScreen() {
-  const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
+  const setTodoLists = useSetAtom(TodoListsAtom);
+
+  const todoListsKeys = useAtomValue(todoListsKeysAtom);
 
   const drawer = useRef<DrawerLayoutAndroid>(null);
 
@@ -39,10 +43,10 @@ export default function HomeScreen() {
   useEffect(() => {
     if (currentTodoListKey !== "") return;
 
-    if (Object.keys(todoLists).length > 0) {
-      setCurrentTodoListKey(Object.keys(todoLists)[0]);
+    if (todoListsKeys.length > 0) {
+      setCurrentTodoListKey(todoListsKeys[0]);
     }
-  }, [todoLists]);
+  }, [todoListsKeys]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

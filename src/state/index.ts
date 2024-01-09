@@ -107,7 +107,7 @@ function reducer(state: TodoListsType, action: ActionType) {
   }
 }
 
-const TodoListsPrimitiveAtom = atom<TodoListsType>({});
+export const TodoListsPrimitiveAtom = atom<TodoListsType>({});
 
 export const TodoListsAtom = atom<TodoListsType, ActionType[], void>(
   (get) => get(TodoListsPrimitiveAtom),
