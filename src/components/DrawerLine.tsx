@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { Pressable, Text, StyleSheet } from "react-native";
 import { atom, useAtomValue, useAtom } from "jotai";
 import { currentTodoListKeyAtom } from "@/state/ui";
+
 interface DrawerLineProps {
   todoListKey: string;
   closeDrawerFunction: () => void;
