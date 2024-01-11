@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import {
   DrawerLayoutAndroid,
   View,
-  Text,
+  TextInput,
   StyleSheet,
   Pressable,
 } from "react-native";
@@ -43,6 +43,14 @@ export default function HomeScreen() {
     drawer.current?.closeDrawer();
   };
 
+  const handleTodoListNameUpdate = (newName: string) => {
+    setTodoLists({
+      type: "UpdateTodoListName",
+      todoListKey: currentTodoListKey,
+      todoListName: newName,
+    });
+  };
+
   useEffect(() => {
     setTodoLists({ type: "SeedTodoLists" });
   }, []);
@@ -72,9 +80,12 @@ export default function HomeScreen() {
           >
             <Ionicons name="menu-outline" size={32} color="black" />
           </Pressable>
-          <Text style={styles.headerText}>
-            {currentTodoListName !== undefined ? currentTodoListName : "..."}
-          </Text>
+          <TextInput
+            style={styles.headerText}
+            onChangeText={handleTodoListNameUpdate}
+            placeholder="Todo List Name"
+            value={currentTodoListName}
+          />
         </View>
         <TodoList todoListKey={currentTodoListKey} />
       </DrawerLayoutAndroid>
@@ -85,7 +96,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   header: {
     paddingRight: 16,
-    paddingVertical: 16,
+    height: 80,
     borderColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
@@ -100,5 +111,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
+    flex: 1,
+    paddingVertical: 8,
   },
 });
