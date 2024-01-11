@@ -102,6 +102,34 @@ describe("useTasks", () => {
     expect(lastCreatedTodoListKey).toBe(todoListKey);
   });
 
+  it("should change the name of a todo list", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => {
+      setTodoLists({ type: "AddNewTodoList" });
+    });
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() => {
+      setTodoLists({
+        type: "UpdateTodoListName",
+        todoListKey: todoListKey,
+        todoListName: "My New Name",
+      });
+    });
+    [todoLists] = result.current;
+
+    const newTodoListName = todoLists[todoListKey].name;
+
+    expect(newTodoListName).toBe("My New Name");
+  });
+
   it("should accept new tasks", () => {
     const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
     const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });

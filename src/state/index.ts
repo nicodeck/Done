@@ -26,6 +26,11 @@ type ActionType =
       todoListKey: string;
     }
   | {
+      type: "UpdateTodoListName";
+      todoListKey: string;
+      todoListName: string;
+    }
+  | {
       type: "ToggleTaskIsCompleted";
       todoListKey: string;
       taskKey: string;
@@ -88,6 +93,7 @@ const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
       } as TodoListsType;
       return { nextState };
     }
+
     case "AddNewTodoList": {
       const todoListUUID = uuid.v4() as string;
       const nextState = produce(state, (draft) => {
@@ -104,6 +110,15 @@ const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
           name: "New Task",
           isCompleted: false,
         };
+      });
+      return { nextState };
+    }
+
+    case "UpdateTodoListName": {
+      const todoListKey = action.todoListKey;
+      const newName = action.todoListName;
+      const nextState = produce(state, (draft) => {
+        draft[todoListKey].name = newName;
       });
       return { nextState };
     }
