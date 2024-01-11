@@ -1,6 +1,7 @@
 import { renderHook, act, cleanup } from "@testing-library/react-native";
 import { Provider, useAtom, useAtomValue } from "jotai";
-import { TodoListsAtom } from "@/state";
+import { TodoListsAtom, lastCreatedTodoListKeyAtom } from "@/state";
+import { currentTodoListKeyAtom } from "../ui";
 
 describe("useTasks", () => {
   afterEach(() => {
@@ -68,15 +69,21 @@ describe("useTasks", () => {
   it("should create a new todo list", () => {
     const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
 
-    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    const { result } = renderHook(
+      () => ({
+        todoLists: useAtom(TodoListsAtom),
+        lastCreatedTodoListKey: useAtom(lastCreatedTodoListKeyAtom),
+      }),
+      { wrapper }
+    );
 
-    const [, setTodoLists] = result.current;
+    const [, setTodoLists] = result.current.todoLists;
 
     act(() => {
       setTodoLists({ type: "AddNewTodoList" });
     });
 
-    let [todoLists] = result.current;
+    let [todoLists] = result.current.todoLists;
 
     expect(Object.keys(todoLists).length).toBe(1);
 
@@ -89,6 +96,10 @@ describe("useTasks", () => {
     };
 
     expect(newTodoList).toMatchObject(todoListToMatch);
+
+    const [lastCreatedTodoListKey] = result.current.lastCreatedTodoListKey;
+
+    expect(lastCreatedTodoListKey).toBe(todoListKey);
   });
 
   it("should accept new tasks", () => {
