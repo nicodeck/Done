@@ -10,14 +10,10 @@ interface TaskLineProps {
 }
 
 export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
-  const isFocusedAtom = useMemo(() => atom(false), []);
-
   const taskAtom = useMemo(
     () => atom((get) => get(TodoListsAtom)[todoListKey].tasks[taskKey]),
     []
   );
-
-  const [isFocused, setIsFocused] = useAtom(isFocusedAtom);
 
   const { isCompleted, name } = useAtomValue(taskAtom);
 
@@ -40,12 +36,12 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
     });
   };
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
+  const handlePressOnDelete = () => {
+    setTodoLists({
+      type: "DeleteTask",
+      todoListKey: todoListKey,
+      taskKey: taskKey,
+    });
   };
 
   return (
@@ -65,14 +61,10 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
         ]}
         value={name}
         onChangeText={handleTaskNameUpdate}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
       />
-      <View>
-        {isFocused ? (
-          <Ionicons name="trash-outline" size={24} color="red" />
-        ) : null}
-      </View>
+      <Pressable onPress={handlePressOnDelete} style={styles.deleteButton}>
+        <Ionicons name="close-outline" size={24} color="black" />
+      </Pressable>
     </View>
   );
 }
@@ -105,5 +97,11 @@ const styles = StyleSheet.create({
   taskTextIsCompleted: {
     color: "#00000055",
     textDecorationLine: "line-through",
+  },
+  deleteButton: {
+    height: 48,
+    width: 48,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -40,12 +40,24 @@ type ActionType =
       type: "DeleteTask";
       todoListKey: string;
       taskKey: string;
+    }
+  | {
+      type: "DeleteTodoList";
+      todoListKey: string;
     };
 
-function reducer(state: TodoListsType, action: ActionType) {
+type ReducerType = (
+  state: TodoListsType,
+  action: ActionType
+) => {
+  nextState: TodoListsType;
+  lastCreatedTodoListKey?: string;
+};
+
+const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
   switch (action.type) {
     case "SeedTodoLists": {
-      return {
+      const nextState = {
         todoListKey0: {
           name: "My Tasks",
           tasks: {
@@ -55,65 +67,106 @@ function reducer(state: TodoListsType, action: ActionType) {
             key3: { name: "Check emails", isCompleted: true },
           },
         },
-      };
+        todoListKey1: {
+          name: "Holidays",
+          tasks: {
+            key0: { name: "Book a hotel", isCompleted: true },
+            key1: { name: "Go to the beach", isCompleted: false },
+            key2: { name: "Buy sunglasses", isCompleted: false },
+            key3: { name: "Turn off my phone", isCompleted: true },
+          },
+        },
+        todoListKey2: {
+          name: "Project",
+          tasks: {
+            key0: { name: "Make a todo list", isCompleted: true },
+            key1: { name: "Write the report", isCompleted: false },
+            key2: { name: "Prepare the meeting", isCompleted: false },
+            key3: { name: "Brainstorm", isCompleted: true },
+          },
+        },
+      } as TodoListsType;
+      return { nextState };
     }
     case "AddNewTodoList": {
       const todoListUUID = uuid.v4() as string;
-      return produce(state, (draft) => {
+      const nextState = produce(state, (draft) => {
         draft[todoListUUID] = { name: "New Todo List", tasks: {} };
       });
+      return { nextState, lastCreatedTodoListKey: todoListUUID };
     }
 
     case "AddNewTask": {
       const todoListKey = action.todoListKey;
       const taskUUID = uuid.v4() as string;
-      return produce((draft) => {
+      const nextState = produce(state, (draft) => {
         draft[todoListKey].tasks[taskUUID] = {
           name: "New Task",
           isCompleted: false,
         };
       });
+      return { nextState };
     }
 
     case "ToggleTaskIsCompleted": {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
-      return produce((draft) => {
+      const nextState = produce(state, (draft) => {
         draft[todoListKey].tasks[taskKey].isCompleted =
           !draft[todoListKey].tasks[taskKey].isCompleted;
       });
+      return { nextState };
     }
 
     case "UpdateTaskName": {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
       const newName = action.name;
-      return produce((draft) => {
+      const nextState = produce(state, (draft) => {
         draft[todoListKey].tasks[taskKey].name = newName;
       });
+      return { nextState };
     }
 
     case "DeleteTask": {
       const todoListKey = action.todoListKey;
       const taskKey = action.taskKey;
-      return produce((draft) => {
+      const nextState = produce(state, (draft) => {
         delete draft[todoListKey].tasks[taskKey];
       });
+      return { nextState };
+    }
+
+    case "DeleteTodoList": {
+      const todoListKey = action.todoListKey;
+      const nextState = produce(state, (draft) => {
+        delete draft[todoListKey];
+      });
+      return { nextState };
     }
 
     default:
       const _exhaustiveCheck: never = action;
-      return _exhaustiveCheck;
+      return { nextState: state };
   }
-}
+};
 
 export const TodoListsPrimitiveAtom = atom<TodoListsType>({});
+
+export const lastCreatedTodoListKeyAtom = atom("");
+
+//TODO implement the atom, write tests before
+// i think reducer should return an object
 
 export const TodoListsAtom = atom<TodoListsType, ActionType[], void>(
   (get) => get(TodoListsPrimitiveAtom),
   (get, set, action) => {
     const state = get(TodoListsPrimitiveAtom);
-    const nextState = reducer(state, action);
+    const changes = reducer(state, action);
+    const nextState = changes.nextState;
     set(TodoListsPrimitiveAtom, nextState);
+    if (changes.lastCreatedTodoListKey) {
+      set(lastCreatedTodoListKeyAtom, changes.lastCreatedTodoListKey);
+    }
   }
 );

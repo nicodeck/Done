@@ -1,6 +1,7 @@
 import { renderHook, act, cleanup } from "@testing-library/react-native";
 import { Provider, useAtom, useAtomValue } from "jotai";
-import { TodoListsAtom } from "@/state";
+import { TodoListsAtom, lastCreatedTodoListKeyAtom } from "@/state";
+import { currentTodoListKeyAtom } from "../ui";
 
 describe("useTasks", () => {
   afterEach(() => {
@@ -41,6 +42,24 @@ describe("useTasks", () => {
           key3: { name: "Check emails", isCompleted: true },
         },
       },
+      todoListKey1: {
+        name: "Holidays",
+        tasks: {
+          key0: { name: "Book a hotel", isCompleted: true },
+          key1: { name: "Go to the beach", isCompleted: false },
+          key2: { name: "Buy sunglasses", isCompleted: false },
+          key3: { name: "Turn off my phone", isCompleted: true },
+        },
+      },
+      todoListKey2: {
+        name: "Project",
+        tasks: {
+          key0: { name: "Make a todo list", isCompleted: true },
+          key1: { name: "Write the report", isCompleted: false },
+          key2: { name: "Prepare the meeting", isCompleted: false },
+          key3: { name: "Brainstorm", isCompleted: true },
+        },
+      },
     };
     const [todoLists] = result.current;
 
@@ -50,15 +69,21 @@ describe("useTasks", () => {
   it("should create a new todo list", () => {
     const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
 
-    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    const { result } = renderHook(
+      () => ({
+        todoLists: useAtom(TodoListsAtom),
+        lastCreatedTodoListKey: useAtom(lastCreatedTodoListKeyAtom),
+      }),
+      { wrapper }
+    );
 
-    const [, setTodoLists] = result.current;
+    const [, setTodoLists] = result.current.todoLists;
 
     act(() => {
       setTodoLists({ type: "AddNewTodoList" });
     });
 
-    let [todoLists] = result.current;
+    let [todoLists] = result.current.todoLists;
 
     expect(Object.keys(todoLists).length).toBe(1);
 
@@ -71,6 +96,10 @@ describe("useTasks", () => {
     };
 
     expect(newTodoList).toMatchObject(todoListToMatch);
+
+    const [lastCreatedTodoListKey] = result.current.lastCreatedTodoListKey;
+
+    expect(lastCreatedTodoListKey).toBe(todoListKey);
   });
 
   it("should accept new tasks", () => {
@@ -246,5 +275,26 @@ describe("useTasks", () => {
     [todoLists] = result.current;
 
     expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(0);
+  });
+
+  it("deletes a todo list", () => {
+    const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
+    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+
+    const [, setTodoLists] = result.current;
+
+    act(() => setTodoLists({ type: "SeedTodoLists" }));
+
+    let [todoLists] = result.current;
+
+    const todoListKey = Object.keys(todoLists)[0];
+
+    act(() =>
+      setTodoLists({ type: "DeleteTodoList", todoListKey: todoListKey })
+    );
+
+    [todoLists] = result.current;
+
+    expect(todoLists[todoListKey]).toBeUndefined();
   });
 });

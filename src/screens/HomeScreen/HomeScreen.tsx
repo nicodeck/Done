@@ -6,14 +6,19 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import TodoDrawer from "../../components/TodoDrawer";
-import TodoList from "../../components/TodoList";
+import TodoDrawer from "@/components/TodoDrawer";
+import TodoList from "@/components/TodoList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { TodoListsAtom } from "@/state";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { currentTodoListKeyAtom } from "@/state/ui";
 
-const currentTodoListKeyAtom = atom<string>("");
+const currentTodoListNameAtom = atom((get) => {
+  const todoLists = get(TodoListsAtom);
+  const currentTodoListKey = get(currentTodoListKeyAtom);
+  return todoLists[currentTodoListKey]?.name;
+});
 
 const todoListsKeysAtom = atom((get) => Object.keys(get(TodoListsAtom)));
 
@@ -27,6 +32,8 @@ export default function HomeScreen() {
   const [currentTodoListKey, setCurrentTodoListKey] = useAtom(
     currentTodoListKeyAtom
   );
+
+  const currentTodoListName = useAtomValue(currentTodoListNameAtom);
 
   const handleHamburgerPress = () => {
     drawer.current?.openDrawer();
@@ -55,7 +62,7 @@ export default function HomeScreen() {
         drawerWidth={300}
         drawerPosition="left"
         renderNavigationView={() => (
-          <TodoDrawer closeButtonFunction={handleDrawerCloseButton} />
+          <TodoDrawer closeDrawerFunction={handleDrawerCloseButton} />
         )}
       >
         <View style={styles.header}>
@@ -65,7 +72,9 @@ export default function HomeScreen() {
           >
             <Ionicons name="menu-outline" size={32} color="black" />
           </Pressable>
-          <Text style={styles.headerText}>My Tasks</Text>
+          <Text style={styles.headerText}>
+            {currentTodoListName !== undefined ? currentTodoListName : "..."}
+          </Text>
         </View>
         <TodoList todoListKey={currentTodoListKey} />
       </DrawerLayoutAndroid>

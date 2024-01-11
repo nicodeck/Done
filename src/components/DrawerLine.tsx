@@ -1,10 +1,44 @@
-import { View, Text, StyleSheet } from "react-native";
+import { TodoListsAtom } from "@/state";
+import { useMemo } from "react";
+import { Pressable, Text, StyleSheet } from "react-native";
+import { atom, useAtomValue, useAtom } from "jotai";
+import { currentTodoListKeyAtom } from "@/state/ui";
 
-export default function DrawerLine() {
+interface DrawerLineProps {
+  todoListKey: string;
+  closeDrawerFunction: () => void;
+}
+
+export default function DrawerLine({
+  todoListKey,
+  closeDrawerFunction,
+}: DrawerLineProps) {
+  const todoListNameAtom = useMemo(
+    () => atom((get) => get(TodoListsAtom)[todoListKey].name),
+    []
+  );
+
+  const todoListName = useAtomValue(todoListNameAtom);
+
+  const [currentTodoListKey, setCurrentTodoListKey] = useAtom(
+    currentTodoListKeyAtom
+  );
+
+  const handlePressOnDrawerLine = () => {
+    setCurrentTodoListKey(todoListKey);
+    closeDrawerFunction();
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>DrawerLine</Text>
-    </View>
+    <Pressable
+      style={[
+        styles.container,
+        currentTodoListKey === todoListKey && styles.activeContainer,
+      ]}
+      onPress={handlePressOnDrawerLine}
+    >
+      <Text style={styles.title}>{todoListName}</Text>
+    </Pressable>
   );
 }
 
@@ -16,6 +50,9 @@ const styles = StyleSheet.create({
     borderColor: "#00000022",
     borderStyle: "solid",
     borderBottomWidth: 1,
+  },
+  activeContainer: {
+    backgroundColor: "#00000010",
   },
   title: {
     fontSize: 16,

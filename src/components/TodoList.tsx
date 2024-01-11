@@ -13,7 +13,8 @@ const completedTasksContainerIsOpenAtom = atom(false);
 export default function TodoList({ todoListKey }: TodoListProps) {
   const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
 
-  const tasks = todoListKey ? todoLists[todoListKey].tasks : {};
+  const tasks =
+    todoListKey && todoLists[todoListKey] ? todoLists[todoListKey].tasks : {};
 
   const countOfNotCompletedTasks = Object.values(tasks).reduce(
     (count, task) => (!task.isCompleted ? count + 1 : count),
