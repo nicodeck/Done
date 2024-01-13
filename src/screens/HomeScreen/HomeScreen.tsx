@@ -55,14 +55,6 @@ export default function HomeScreen() {
     setTodoLists({ type: "SeedTodoLists" });
   }, []);
 
-  useEffect(() => {
-    if (currentTodoListKey !== "") return;
-
-    if (todoListsKeys.length > 0) {
-      setCurrentTodoListKey(todoListsKeys[0]);
-    }
-  }, [todoListsKeys]);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerLayoutAndroid

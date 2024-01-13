@@ -1,7 +1,6 @@
 import { renderHook, act, cleanup } from "@testing-library/react-native";
 import { Provider, useAtom, useAtomValue } from "jotai";
 import { TodoListsAtom, lastCreatedTodoListKeyAtom } from "@/state";
-import { currentTodoListKeyAtom } from "../ui";
 
 describe("useTasks", () => {
   afterEach(() => {

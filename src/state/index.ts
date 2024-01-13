@@ -170,9 +170,6 @@ export const TodoListsPrimitiveAtom = atom<TodoListsType>({});
 
 export const lastCreatedTodoListKeyAtom = atom("");
 
-//TODO implement the atom, write tests before
-// i think reducer should return an object
-
 export const TodoListsAtom = atom<TodoListsType, ActionType[], void>(
   (get) => get(TodoListsPrimitiveAtom),
   (get, set, action) => {
