@@ -1,16 +1,11 @@
 {
   "expo": {
-    "name": "my-todo-app-in-react-native",
-    "slug": "my-todo-app-in-react-native",
+    "name": "Done",
+    "slug": "done-todo-app-in-react-native",
     "version": "1.0.0",
-    "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,13 +14,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/adaptive_icon.png",
+        "backgroundColor": "#000000"
       },
-      "package": "com.nicodeck.mytodoappinreactnative"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "package": "com.nicodeck.done"
     },
     "experiments": {
       "tsconfigPaths": true
