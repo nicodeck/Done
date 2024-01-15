@@ -1,4 +1,4 @@
-package com.nicodeck.mytodoappinreactnative;
+package com.nicodeck.done;
 
 import android.app.Application;
 import android.content.res.Configuration;

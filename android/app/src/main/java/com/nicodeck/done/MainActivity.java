@@ -1,4 +1,4 @@
-package com.nicodeck.mytodoappinreactnative;
+package com.nicodeck.done;
 
 import android.os.Build;
 import android.os.Bundle;
