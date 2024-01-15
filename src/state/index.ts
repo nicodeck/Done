@@ -1,3 +1,4 @@
+import { atomWithMMKV } from "@/utils/atomWithMMKV";
 import { produce } from "immer";
 import { atom } from "jotai";
 import uuid from "react-native-uuid";
@@ -166,7 +167,10 @@ const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
   }
 };
 
-export const TodoListsPrimitiveAtom = atom<TodoListsType>({});
+export const TodoListsPrimitiveAtom = atomWithMMKV<TodoListsType>(
+  "todoLists",
+  {}
+);
 
 export const lastCreatedTodoListKeyAtom = atom("");
 
