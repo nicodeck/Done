@@ -52,7 +52,7 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    setTodoLists({ type: "SeedTodoLists" });
+    if (todoListsKeys.length == 0) setTodoLists({ type: "SeedTodoLists" });
   }, []);
 
   return (
