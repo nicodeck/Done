@@ -13,6 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { TodoListsAtom } from "@/state";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { currentTodoListKeyAtom } from "@/state/ui";
+import TaskModal from "@/components/TaskModal";
 
 const currentTodoListNameAtom = atom((get) => {
   const todoLists = get(TodoListsAtom);
@@ -78,6 +79,7 @@ export default function HomeScreen() {
           />
         </View>
         <TodoList todoListKey={currentTodoListKey} />
+        <TaskModal />
       </DrawerLayoutAndroid>
     </SafeAreaView>
   );
