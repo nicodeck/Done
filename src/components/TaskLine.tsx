@@ -1,8 +1,9 @@
-import { View, TextInput, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { TodoListsAtom, TodoListsPrimitiveAtom } from "@/state";
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import { TodoListsAtom } from "@/state";
 import { useMemo } from "react";
+import { taskModalIsVisibleAtom, taskModalTaskKeyAtom } from "@/state/ui";
 
 interface TaskLineProps {
   todoListKey: string;
@@ -19,6 +20,10 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
 
   const setTodoLists = useSetAtom(TodoListsAtom);
 
+  const setTaskModalIsVisible = useSetAtom(taskModalIsVisibleAtom);
+
+  const setTaskModalTaskKey = useSetAtom(taskModalTaskKeyAtom);
+
   const handleToggleTask = () => {
     setTodoLists({
       type: "ToggleTaskIsCompleted",
@@ -27,13 +32,9 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
     });
   };
 
-  const handleTaskNameUpdate = (newName: string) => {
-    setTodoLists({
-      type: "UpdateTaskName",
-      todoListKey: todoListKey,
-      taskKey: taskKey,
-      name: newName,
-    });
+  const handlePressOnTaskName = () => {
+    setTaskModalTaskKey(taskKey);
+    setTaskModalIsVisible(true);
   };
 
   const handlePressOnDelete = () => {
@@ -53,15 +54,16 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
           <Ionicons name="ellipse-outline" size={24} color="black" />
         )}
       </Pressable>
-
-      <TextInput
-        style={[
-          styles.taskText,
-          isCompleted ? styles.taskTextIsCompleted : null,
-        ]}
-        value={name}
-        onChangeText={handleTaskNameUpdate}
-      />
+      <Pressable onPress={handlePressOnTaskName} style={styles.taskPressable}>
+        <Text
+          style={[
+            styles.taskText,
+            isCompleted ? styles.taskTextIsCompleted : null,
+          ]}
+        >
+          {name}
+        </Text>
+      </Pressable>
       <Pressable onPress={handlePressOnDelete} style={styles.deleteButton}>
         <Ionicons name="close-outline" size={24} color="black" />
       </Pressable>
@@ -74,9 +76,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-
     paddingVertical: 8,
     paddingHorizontal: 8,
+    height: 72,
     borderBottomColor: "#00000022",
     borderBottomWidth: 1,
     borderStyle: "solid",
@@ -87,11 +89,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 8,
   },
+  taskPressable: {
+    flex: 1,
+    padding: 16,
+    paddingLeft: 8,
+  },
   taskText: {
     fontSize: 16,
-    flex: 1,
-    height: 48,
-    paddingLeft: 8,
     color: "black",
   },
   taskTextIsCompleted: {
