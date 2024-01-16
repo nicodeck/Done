@@ -21,6 +21,12 @@
     },
     "experiments": {
       "tsconfigPaths": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "03f498e1-f232-440f-9efd-39c66c24f5a2"
+      }
+    },
+    "owner": "nicodeck"
   }
 }
