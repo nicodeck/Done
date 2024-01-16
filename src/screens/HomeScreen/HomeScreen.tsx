@@ -29,9 +29,7 @@ export default function HomeScreen() {
 
   const drawer = useRef<DrawerLayoutAndroid>(null);
 
-  const [currentTodoListKey, setCurrentTodoListKey] = useAtom(
-    currentTodoListKeyAtom
-  );
+  const [currentTodoListKey] = useAtom(currentTodoListKeyAtom);
 
   const currentTodoListName = useAtomValue(currentTodoListNameAtom);
 
@@ -52,8 +50,8 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    setTodoLists({ type: "SeedTodoLists" });
-  }, []);
+    if (todoListsKeys.length == 0) setTodoLists({ type: "SeedTodoLists" });
+  }, [todoListsKeys]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
