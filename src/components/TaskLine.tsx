@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { TodoListsAtom } from "@/state";
@@ -24,6 +30,8 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
 
   const setTaskModalTaskKey = useSetAtom(taskModalTaskKeyAtom);
 
+  const darkModeIsOn = useColorScheme() == "dark";
+
   const handleToggleTask = () => {
     setTodoLists({
       type: "ToggleTaskIsCompleted",
@@ -46,19 +54,29 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, darkModeIsOn && styles.containerDark]}>
       <Pressable onPress={handleToggleTask} style={styles.isCompletedPressable}>
         {isCompleted ? (
-          <Ionicons name="checkmark-circle-outline" size={24} color="black" />
+          <Ionicons
+            name="checkmark-circle-outline"
+            size={24}
+            color={darkModeIsOn ? "white" : "black"}
+          />
         ) : (
-          <Ionicons name="ellipse-outline" size={24} color="black" />
+          <Ionicons
+            name="ellipse-outline"
+            size={24}
+            color={darkModeIsOn ? "white" : "black"}
+          />
         )}
       </Pressable>
       <Pressable onPress={handlePressOnTaskName} style={styles.taskPressable}>
         <Text
           style={[
             styles.taskText,
-            isCompleted ? styles.taskTextIsCompleted : null,
+            darkModeIsOn && styles.taskTextDark,
+            isCompleted && styles.taskTextIsCompleted,
+            isCompleted && darkModeIsOn && styles.taskTextIsCompletedDark,
           ]}
         >
           {name}
@@ -83,6 +101,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderStyle: "solid",
   },
+  containerDark: {
+    borderBottomColor: "#ffffff22",
+  },
   isCompletedPressable: {
     height: 48,
     justifyContent: "center",
@@ -98,9 +119,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
   },
+  taskTextDark: {
+    color: "white",
+  },
   taskTextIsCompleted: {
     color: "#00000055",
     textDecorationLine: "line-through",
+  },
+  taskTextIsCompletedDark: {
+    color: "#ffffff88",
   },
   deleteButton: {
     height: 48,
