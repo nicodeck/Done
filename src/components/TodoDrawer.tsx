@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import { atom, useSetAtom, useAtomValue } from "jotai";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import DrawerLine from "./DrawerLine";
@@ -25,6 +31,8 @@ export default function TodoDrawer({ closeDrawerFunction }: TodoDrawerProps) {
 
   const todoListsKeys = useAtomValue(TodoListsKeysAtom);
 
+  const darkModeIsOn = useColorScheme() == "dark";
+
   const handlePressOnAddButton = () => {
     setTodoLists({ type: "AddNewTodoList" });
     setJustAddedANewTodoList(true);
@@ -39,14 +47,26 @@ export default function TodoDrawer({ closeDrawerFunction }: TodoDrawerProps) {
   }, [justAddedANewTodoList]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, darkModeIsOn && styles.containerDark]}>
+      <View style={[styles.header, darkModeIsOn && styles.headerDark]}>
         <Pressable style={styles.closeButton} onPress={closeDrawerFunction}>
-          <Ionicons name="close-outline" size={32} color="black" />
+          <Ionicons
+            name="close-outline"
+            size={32}
+            color={darkModeIsOn ? "white" : "black"}
+          />
         </Pressable>
-        <Text style={styles.headerText}>My Todo Lists</Text>
+        <Text
+          style={[styles.headerText, darkModeIsOn && styles.headerTextDark]}
+        >
+          My Todo Lists
+        </Text>
         <Pressable style={styles.addButton} onPress={handlePressOnAddButton}>
-          <Ionicons name="add-outline" size={32} color="black" />
+          <Ionicons
+            name="add-outline"
+            size={32}
+            color={darkModeIsOn ? "white" : "black"}
+          />
         </Pressable>
       </View>
       {todoListsKeys.map((todoListKey) => (
@@ -64,6 +84,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  containerDark: {
+    backgroundColor: "#121212",
+  },
   header: {
     paddingVertical: 8,
     flexDirection: "row",
@@ -71,6 +94,9 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderBottomWidth: 1,
     alignItems: "center",
+  },
+  headerDark: {
+    borderColor: "#ffffff22",
   },
   closeButton: {
     paddingHorizontal: 16,
@@ -84,5 +110,8 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
+  },
+  headerTextDark: {
+    color: "white",
   },
 });

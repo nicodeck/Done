@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   View,
+  useColorScheme,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
@@ -41,6 +42,8 @@ export default function TaskModal() {
 
   const setTodoLists = useSetAtom(TodoListsAtom);
 
+  const darkModeIsOn = useColorScheme() == "dark";
+
   const handleTaskNameChange = (newTaskName: string) => {
     setTodoLists({
       type: "UpdateTaskName",
@@ -52,20 +55,33 @@ export default function TaskModal() {
 
   return (
     <Modal visible={taskModalIsVisible} animationType="slide">
-      <View style={styles.container}>
-        <View style={styles.closeButtonRow}>
+      <View style={[styles.container, darkModeIsOn && styles.containerDark]}>
+        <View
+          style={[
+            styles.closeButtonRow,
+            darkModeIsOn && styles.closeButtonRowDark,
+          ]}
+        >
           <Pressable
             style={styles.closeButton}
             onPress={handlePressOnCloseButton}
           >
-            <Ionicons name="close-outline" size={32} color="black" />
+            <Ionicons
+              name="close-outline"
+              size={32}
+              color={darkModeIsOn ? "white" : "black"}
+            />
           </Pressable>
         </View>
         <TextInput
           value={taskInfo?.name}
-          style={styles.taskNameInput}
+          style={[
+            styles.taskNameInput,
+            darkModeIsOn && styles.taskNameInputDark,
+          ]}
           onChangeText={handleTaskNameChange}
           placeholder="Enter a task name..."
+          placeholderTextColor={darkModeIsOn ? "#ffffffaa" : "#000000aa"}
         />
       </View>
     </Modal>
@@ -77,6 +93,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#eeeeee",
     flex: 1,
   },
+  containerDark: {
+    backgroundColor: "#222222",
+  },
   closeButtonRow: {
     alignItems: "flex-end",
     borderBottomWidth: 1,
@@ -84,6 +103,9 @@ const styles = StyleSheet.create({
     borderColor: "#cccccc",
     height: 72,
     justifyContent: "center",
+  },
+  closeButtonRowDark: {
+    borderColor: "#444444",
   },
   closeButton: {
     height: 48,
@@ -100,5 +122,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderStyle: "solid",
     borderColor: "#cccccc",
+  },
+  taskNameInputDark: {
+    backgroundColor: "#121212",
+    borderColor: "#444444",
+    color: "white",
   },
 });
