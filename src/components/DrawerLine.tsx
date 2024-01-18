@@ -1,5 +1,11 @@
 import { useMemo } from "react";
-import { Pressable, Text, StyleSheet, Alert } from "react-native";
+import {
+  Pressable,
+  Text,
+  StyleSheet,
+  Alert,
+  useColorScheme,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { atom, useAtomValue, useAtom, useSetAtom } from "jotai";
 import { TodoListsAtom } from "@/state";
@@ -26,6 +32,8 @@ export default function DrawerLine({
   );
 
   const setTodoLists = useSetAtom(TodoListsAtom);
+
+  const darkModeIsOn = useColorScheme() == "dark";
 
   const handlePressOnDrawerLine = () => {
     setCurrentTodoListKey(todoListKey);
@@ -56,16 +64,26 @@ export default function DrawerLine({
     <Pressable
       style={[
         styles.container,
+        darkModeIsOn && styles.containerDark,
         currentTodoListKey === todoListKey && styles.activeContainer,
+        currentTodoListKey === todoListKey &&
+          darkModeIsOn &&
+          styles.activeContainerDark,
       ]}
       onPress={handlePressOnDrawerLine}
     >
-      <Text style={styles.title}>{todoListName}</Text>
+      <Text style={[styles.title, darkModeIsOn && styles.titleDark]}>
+        {todoListName}
+      </Text>
       <Pressable
         onPress={handlePressOnDeleteButton}
         style={styles.deleteButton}
       >
-        <Ionicons name="close-outline" size={24} color="black" />
+        <Ionicons
+          name="close-outline"
+          size={24}
+          color={darkModeIsOn ? "white" : "black"}
+        />
       </Pressable>
     </Pressable>
   );
@@ -84,12 +102,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  containerDark: {
+    borderColor: "#ffffff22",
+  },
   activeContainer: {
     backgroundColor: "#00000010",
+  },
+  activeContainerDark: {
+    backgroundColor: "#ffffff10",
   },
   title: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  titleDark: {
+    color: "white",
   },
   deleteButton: {
     height: 48,
