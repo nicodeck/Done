@@ -1,4 +1,11 @@
-import { Text, StyleSheet, Pressable, ScrollView, View } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  View,
+  useColorScheme,
+} from "react-native";
 import TaskLine from "./TaskLine";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { TodoListsAtom } from "@/state";
@@ -28,6 +35,8 @@ export default function TodoList({ todoListKey }: TodoListProps) {
 
   const [completedTasksContainerIsOpen, setCompletedTasksContainerIsOpen] =
     useAtom(completedTasksContainerIsOpenAtom);
+
+  const darkModeIsOn = useColorScheme() == "dark";
 
   const handlePressOnCompletedTasksHeader = () => {
     setCompletedTasksContainerIsOpen(!completedTasksContainerIsOpen);
@@ -66,28 +75,65 @@ export default function TodoList({ todoListKey }: TodoListProps) {
             }
           })
         ) : (
-          <View style={styles.noTasksTextContainer}>
-            <Text style={styles.noTasksText}>No tasks... Add one?</Text>
+          <View
+            style={[
+              styles.noTasksTextContainer,
+              darkModeIsOn && styles.noTasksTextContainerDark,
+            ]}
+          >
+            <Text
+              style={[
+                styles.noTasksText,
+                darkModeIsOn && styles.noTasksTextDark,
+              ]}
+            >
+              No tasks... Add one?
+            </Text>
           </View>
         )}
 
         {countOfCompletedTasks > 0 && (
           <Pressable
-            style={styles.completedTasksHeaderContainer}
+            style={[
+              styles.completedTasksHeaderContainer,
+              styles.completedTasksHeaderContainerDark,
+            ]}
             onPress={handlePressOnCompletedTasksHeader}
           >
-            <Text style={styles.completedTasksHeaderText}>Completed Tasks</Text>
+            <Text
+              style={[
+                styles.completedTasksHeaderText,
+                darkModeIsOn && styles.completedTaskHeaderTextDark,
+              ]}
+            >
+              Completed Tasks
+            </Text>
             {completedTasksContainerIsOpen ? (
-              <Ionicons name="chevron-up-outline" size={20} color="black" />
+              <Ionicons
+                name="chevron-up-outline"
+                size={20}
+                color={darkModeIsOn ? "white" : "black"}
+              />
             ) : (
-              <Ionicons name="chevron-down-outline" size={20} color="black" />
+              <Ionicons
+                name="chevron-down-outline"
+                size={20}
+                color={darkModeIsOn ? "white" : "black"}
+              />
             )}
           </Pressable>
         )}
         {completedTasksContainerIsOpen ? completedTasksList() : null}
       </ScrollView>
-      <Pressable onPress={handlePressOnAddTask} style={styles.addButton}>
-        <Ionicons name="add-outline" size={24} color="white" />
+      <Pressable
+        onPress={handlePressOnAddTask}
+        style={[styles.addButton, darkModeIsOn && styles.addButtonDark]}
+      >
+        <Ionicons
+          name="add-outline"
+          size={24}
+          color={darkModeIsOn ? "black" : "white"}
+        />
       </Pressable>
     </View>
   );
@@ -105,10 +151,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderStyle: "solid",
   },
+  noTasksTextContainerDark: {
+    borderBottomColor: "#ffffff22",
+  },
   noTasksText: {
     fontSize: 16,
     color: "#000000aa",
     fontStyle: "italic",
+  },
+  noTasksTextDark: {
+    color: "#ffffffaa",
   },
   completedTasksHeaderContainer: {
     padding: 16,
@@ -117,8 +169,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  completedTasksHeaderContainerDark: {
+    backgroundColor: "#fafafa22",
+  },
   completedTasksHeaderText: {
     fontSize: 16,
+  },
+  completedTaskHeaderTextDark: {
+    color: "white",
   },
   addButton: {
     backgroundColor: "black",
@@ -130,5 +188,8 @@ const styles = StyleSheet.create({
     width: 64,
     alignItems: "center",
     justifyContent: "center",
+  },
+  addButtonDark: {
+    backgroundColor: "white",
   },
 });
