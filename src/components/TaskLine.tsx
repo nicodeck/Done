@@ -83,7 +83,11 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
         </Text>
       </Pressable>
       <Pressable onPress={handlePressOnDelete} style={styles.deleteButton}>
-        <Ionicons name="close-outline" size={24} color="black" />
+        <Ionicons
+          name="close-outline"
+          size={24}
+          color={darkModeIsOn ? "white" : "black"}
+        />
       </Pressable>
     </View>
   );
