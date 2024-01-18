@@ -8,7 +8,7 @@ export default function App() {
   return (
     <StrictMode>
       <SafeAreaProvider>
-        <StatusBar style="dark" />
+        <StatusBar style="auto" />
         <HomeScreen />
       </SafeAreaProvider>
     </StrictMode>
