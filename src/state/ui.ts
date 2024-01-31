@@ -21,7 +21,3 @@ export const currentTodoListKeyAtom = atom(
   },
   (get, set, update: string) => set(currentTodoListKeyPrimitiveAtom, update)
 );
-
-export const taskModalIsVisibleAtom = atom(false);
-
-export const taskModalTaskKeyAtom = atom("");
