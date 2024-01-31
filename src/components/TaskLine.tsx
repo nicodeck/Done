@@ -1,6 +1,6 @@
 import {
   View,
-  Text,
+  TextInput,
   StyleSheet,
   Pressable,
   useColorScheme,
@@ -9,7 +9,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { TodoListsAtom } from "@/state";
 import { useMemo } from "react";
-import { taskModalIsVisibleAtom, taskModalTaskKeyAtom } from "@/state/ui";
 
 interface TaskLineProps {
   todoListKey: string;
@@ -26,10 +25,6 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
 
   const setTodoLists = useSetAtom(TodoListsAtom);
 
-  const setTaskModalIsVisible = useSetAtom(taskModalIsVisibleAtom);
-
-  const setTaskModalTaskKey = useSetAtom(taskModalTaskKeyAtom);
-
   const darkModeIsOn = useColorScheme() == "dark";
 
   const handleToggleTask = () => {
@@ -40,9 +35,13 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
     });
   };
 
-  const handlePressOnTaskName = () => {
-    setTaskModalTaskKey(taskKey);
-    setTaskModalIsVisible(true);
+  const handleTaskNameUpdate = (newName: string) => {
+    setTodoLists({
+      type: "UpdateTaskName",
+      todoListKey: todoListKey,
+      taskKey: taskKey,
+      name: newName,
+    });
   };
 
   const handlePressOnDelete = () => {
@@ -70,18 +69,17 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
           />
         )}
       </Pressable>
-      <Pressable onPress={handlePressOnTaskName} style={styles.taskPressable}>
-        <Text
-          style={[
-            styles.taskText,
-            darkModeIsOn && styles.taskTextDark,
-            isCompleted && styles.taskTextIsCompleted,
-            isCompleted && darkModeIsOn && styles.taskTextIsCompletedDark,
-          ]}
-        >
-          {name}
-        </Text>
-      </Pressable>
+      <TextInput
+        style={[
+          styles.taskText,
+          darkModeIsOn && styles.taskTextDark,
+          isCompleted && styles.taskTextIsCompleted,
+          isCompleted && darkModeIsOn && styles.taskTextIsCompletedDark,
+        ]}
+        onChangeText={handleTaskNameUpdate}
+      >
+        {name}
+      </TextInput>
       <Pressable onPress={handlePressOnDelete} style={styles.deleteButton}>
         <Ionicons
           name="close-outline"
@@ -114,14 +112,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 8,
   },
-  taskPressable: {
-    flex: 1,
-    padding: 16,
-    paddingLeft: 8,
-  },
   taskText: {
     fontSize: 16,
     color: "black",
+    flex: 1,
+    padding: 16,
+    paddingLeft: 8,
   },
   taskTextDark: {
     color: "white",
