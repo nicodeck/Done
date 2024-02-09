@@ -58,6 +58,7 @@ type ReducerType = (
 ) => {
   nextState: TodoListsType;
   lastCreatedTodoListKey?: string;
+  lastCreatedTaskKey?: string;
 };
 
 const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
@@ -108,11 +109,11 @@ const reducer: ReducerType = (state: TodoListsType, action: ActionType) => {
       const taskUUID = uuid.v4() as string;
       const nextState = produce(state, (draft) => {
         draft[todoListKey].tasks[taskUUID] = {
-          name: "New Task",
+          name: "",
           isCompleted: false,
         };
       });
-      return { nextState };
+      return { nextState, lastCreatedTaskKey: taskUUID };
     }
 
     case "UpdateTodoListName": {
@@ -174,6 +175,8 @@ export const TodoListsPrimitiveAtom = atomWithMMKV<TodoListsType>(
 
 export const lastCreatedTodoListKeyAtom = atom("");
 
+export const lastCreatedTaskKeyAtom = atom("");
+
 export const TodoListsAtom = atom<TodoListsType, ActionType[], void>(
   (get) => get(TodoListsPrimitiveAtom),
   (get, set, action) => {
@@ -183,6 +186,9 @@ export const TodoListsAtom = atom<TodoListsType, ActionType[], void>(
     set(TodoListsPrimitiveAtom, nextState);
     if (changes.lastCreatedTodoListKey) {
       set(lastCreatedTodoListKeyAtom, changes.lastCreatedTodoListKey);
+    }
+    if (changes.lastCreatedTaskKey) {
+      set(lastCreatedTaskKeyAtom, changes.lastCreatedTaskKey);
     }
   }
 );
