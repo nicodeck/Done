@@ -13,9 +13,14 @@ import { useMemo } from "react";
 interface TaskLineProps {
   todoListKey: string;
   taskKey: string;
+  isAutoFocus?: boolean;
 }
 
-export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
+export default function TaskLine({
+  todoListKey,
+  taskKey,
+  isAutoFocus,
+}: TaskLineProps) {
   const taskAtom = useMemo(
     () => atom((get) => get(TodoListsAtom)[todoListKey].tasks[taskKey]),
     []
@@ -79,6 +84,7 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
         onChangeText={handleTaskNameUpdate}
         placeholder="Task name"
         placeholderTextColor="#aaaaaa"
+        autoFocus={isAutoFocus}
       >
         {name}
       </TextInput>
