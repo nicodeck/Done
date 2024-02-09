@@ -8,6 +8,14 @@ Features:
 
 - create and delete todo lists
 - add, complete and delete tasks
+- light and dark mode
+
+## Screenshots
+
+<p float="left" align="middle">
+<img src="./assets/readme/todolist.png" width="250" height="auto" alt="Screenshot of a todo list">
+<img src="./assets/readme/drawer.png" width="250" height="auto" alt="Screenshot of the menu">
+</p>
 
 ## Requirements
 
