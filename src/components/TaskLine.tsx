@@ -77,6 +77,8 @@ export default function TaskLine({ todoListKey, taskKey }: TaskLineProps) {
           isCompleted && darkModeIsOn && styles.taskTextIsCompletedDark,
         ]}
         onChangeText={handleTaskNameUpdate}
+        placeholder="Task name"
+        placeholderTextColor="#aaaaaa"
       >
         {name}
       </TextInput>
