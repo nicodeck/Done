@@ -1,6 +1,10 @@
 import { renderHook, act, cleanup } from "@testing-library/react-native";
 import { Provider, useAtom, useAtomValue } from "jotai";
-import { TodoListsAtom, lastCreatedTodoListKeyAtom } from "@/state";
+import {
+  TodoListsAtom,
+  lastCreatedTodoListKeyAtom,
+  lastCreatedTaskKeyAtom,
+} from "@/state";
 
 describe("useTasks", () => {
   afterEach(() => {
@@ -129,17 +133,23 @@ describe("useTasks", () => {
     expect(newTodoListName).toBe("My New Name");
   });
 
-  it("should accept new tasks", () => {
+  it("should create new tasks", () => {
     const wrapper = ({ children }: any) => <Provider>{children}</Provider>;
-    const { result } = renderHook(() => useAtom(TodoListsAtom), { wrapper });
+    const { result } = renderHook(
+      () => ({
+        todoLists: useAtom(TodoListsAtom),
+        lastCreatedTaskKey: useAtom(lastCreatedTaskKeyAtom),
+      }),
+      { wrapper }
+    );
 
-    const [, setTodoLists] = result.current;
+    const [, setTodoLists] = result.current.todoLists;
 
     act(() => {
       setTodoLists({ type: "AddNewTodoList" });
     });
 
-    let [todoLists] = result.current;
+    let [todoLists] = result.current.todoLists;
 
     const todoListKey = Object.keys(todoLists)[0];
 
@@ -147,14 +157,18 @@ describe("useTasks", () => {
       setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
     });
 
-    [todoLists] = result.current;
+    [todoLists] = result.current.todoLists;
 
     expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(1);
 
     const singleTaskKey = Object.keys(todoLists[todoListKey].tasks)[0];
 
+    let [lastCreatedTaskKey] = result.current.lastCreatedTaskKey;
+
+    expect(lastCreatedTaskKey).toBe(singleTaskKey);
+
     const taskToMatch = {
-      name: "New Task",
+      name: "",
       isCompleted: false,
     };
 
@@ -166,11 +180,13 @@ describe("useTasks", () => {
       setTodoLists({ type: "AddNewTask", todoListKey: todoListKey });
     });
 
-    [todoLists] = result.current;
+    [todoLists] = result.current.todoLists;
 
     expect(Object.keys(todoLists[todoListKey].tasks).length).toBe(2);
 
     const twoTasksKeys = Object.keys(todoLists[todoListKey].tasks);
+
+    [lastCreatedTaskKey] = result.current.lastCreatedTaskKey;
 
     expect(todoLists[todoListKey].tasks[twoTasksKeys[0]]).toMatchObject(
       taskToMatch
@@ -178,6 +194,8 @@ describe("useTasks", () => {
     expect(todoLists[todoListKey].tasks[twoTasksKeys[1]]).toMatchObject(
       taskToMatch
     );
+
+    expect(lastCreatedTaskKey).toBe(twoTasksKeys[1]);
   });
 
   it("should update isCompleted property", () => {

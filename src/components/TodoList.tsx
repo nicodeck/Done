@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import TaskLine from "./TaskLine";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { TodoListsAtom } from "@/state";
-import { atom, useAtom } from "jotai";
+import { TodoListsAtom, lastCreatedTaskKeyAtom } from "@/state";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 
 interface TodoListProps {
   todoListKey: string;
@@ -19,6 +20,10 @@ const completedTasksContainerIsOpenAtom = atom(false);
 
 export default function TodoList({ todoListKey }: TodoListProps) {
   const [todoLists, setTodoLists] = useAtom(TodoListsAtom);
+
+  const [justAddedANewTask, setJustAddedANewTask] = useState(false);
+
+  const lastCreatedTaskKey = useAtomValue(lastCreatedTaskKeyAtom);
 
   const tasks =
     todoListKey && todoLists[todoListKey] ? todoLists[todoListKey].tasks : {};
@@ -47,6 +52,7 @@ export default function TodoList({ todoListKey }: TodoListProps) {
       type: "AddNewTask",
       todoListKey: todoListKey,
     });
+    setJustAddedANewTask(true);
   };
 
   const completedTasksList = () => {
@@ -63,6 +69,12 @@ export default function TodoList({ todoListKey }: TodoListProps) {
     );
   };
 
+  useEffect(() => {
+    if (justAddedANewTask) {
+      setJustAddedANewTask(false);
+    }
+  }, [justAddedANewTask]);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
@@ -70,7 +82,12 @@ export default function TodoList({ todoListKey }: TodoListProps) {
           Object.keys(tasks).map((key) => {
             if (!tasks[key].isCompleted) {
               return (
-                <TaskLine key={key} todoListKey={todoListKey} taskKey={key} />
+                <TaskLine
+                  key={key}
+                  todoListKey={todoListKey}
+                  taskKey={key}
+                  isAutoFocus={lastCreatedTaskKey === key && justAddedANewTask}
+                />
               );
             }
           })
